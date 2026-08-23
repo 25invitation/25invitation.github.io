@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cinzel", "Marcellus", serif;
+  --font-editorial: "Cormorant Garamond", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+
+  --color-silver-50: #f8fafc;
+  --color-silver-100: #f1f5f9;
+  --color-silver-200: #e2e8f0;
+  --color-silver-300: #cbd5e1;
+  --color-silver-400: #94a3b8;
+  --color-silver-500: #64748b;
+  --color-silver-light: #e6ecf5;
+  --color-silver-foil: #d4dde8;
+  --color-silver-dark: #334155;
+  
+  --color-royal-dark: #070913;
+  --color-royal-card: #0e1224;
+  --color-royal-blue: #1a2340;
+  --color-royal-border: rgba(226, 232, 240, 0.15);
+  --color-gold-accent: #e5b869;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background-color: #080a14;
+    color: #f1f5f9;
+    overflow-x: hidden;
+  }
+}
+
+/* Luxury Metallic Shimmer Effects */
+.silver-text-gradient {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #e2e8f0 25%,
+    #94a3b8 50%,
+    #f8fafc 75%,
+    #cbd5e1 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-text-gradient {
+  background: linear-gradient(
+    135deg,
+    #fff2cc 0%,
+    #e5b869 40%,
+    #f9d98c 70%,
+    #b38b34 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.silver-shimmer-border {
+  border: 1px solid rgba(226, 232, 240, 0.25);
+  box-shadow: 0 0 20px rgba(203, 213, 225, 0.08), inset 0 0 15px rgba(255, 255, 255, 0.03);
+}
+
+.silver-glow {
+  box-shadow: 0 0 25px rgba(226, 232, 240, 0.2), 0 0 50px rgba(148, 163, 184, 0.1);
+}
+
+.card-glass {
+  background: rgba(14, 18, 36, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.16);
+}
+
+/* Indian Ornamental Arch & Pattern Accents */
+.indian-pattern-bg {
+  background-color: #080a14;
+  background-image: radial-gradient(rgba(226, 232, 240, 0.08) 1px, transparent 1px), radial-gradient(rgba(229, 184, 105, 0.05) 1px, #080a14 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+/* Subtle Shimmer Animation */
+@keyframes tinselShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: tinselShimmer 4s infinite linear;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #080a14;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+

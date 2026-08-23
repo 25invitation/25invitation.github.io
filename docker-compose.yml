@@ -1,0 +1,8 @@
+services:
+  evite-web:
+    build: .
+    image: evite-web:latest
+    container_name: evite-web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
