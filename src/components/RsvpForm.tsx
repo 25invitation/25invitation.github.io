@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { eventConfig, type GuestProfile } from "../config/eventConfig";
 import confetti from "canvas-confetti";
 import {
@@ -17,13 +17,28 @@ interface RsvpFormProps {
 export const RsvpForm: React.FC<RsvpFormProps> = ({
   currentGuest,
 }) => {
+  const isGeneralGuest =
+    !currentGuest ||
+    currentGuest.id === "general" ||
+    currentGuest.name === "Cherished Friends & Family";
+
   const [attending, setAttending] = useState<"yes" | "no" | null>(null);
-  const [guestName, setGuestName] = useState<string>(currentGuest.name);
+  const [guestName, setGuestName] = useState<string>(
+    isGeneralGuest ? "" : currentGuest.name
+  );
   const [guestCount, setGuestCount] = useState<number>(2);
   const [message, setMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const isGeneral =
+      !currentGuest ||
+      currentGuest.id === "general" ||
+      currentGuest.name === "Cherished Friends & Family";
+    setGuestName(isGeneral ? "" : currentGuest.name);
+  }, [currentGuest]);
 
   // Trigger Silver & Gold Jubilee Confetti Explosion
   const fireSilverConfetti = () => {
@@ -57,6 +72,10 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
     e.preventDefault();
     if (!attending) {
       setSubmitError("Please select whether you will be attending.");
+      return;
+    }
+    if (!guestName.trim()) {
+      setSubmitError("Please enter your full name.");
       return;
     }
 
@@ -259,7 +278,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
                 required
-                placeholder="e.g. Rajesh & Anjali Sharma"
+                placeholder="e.g. Cherished Friends & Family"
                 className="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-600/60 text-white placeholder-slate-500 focus:outline-none focus:border-slate-300 focus:ring-1 focus:ring-slate-300 text-sm sm:text-base transition-all"
               />
             </div>

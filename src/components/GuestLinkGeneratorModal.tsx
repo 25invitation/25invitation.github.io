@@ -115,7 +115,7 @@ export const GuestLinkGeneratorModal: React.FC<GuestLinkGeneratorModalProps> = (
             <div>
               <input
                 type="text"
-                placeholder="e.g. Anand & Sunita Mehta"
+                placeholder="e.g. Cherished Friends & Family"
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-slate-400"
