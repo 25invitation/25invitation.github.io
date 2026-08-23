@@ -1,8 +1,8 @@
 export interface GuestProfile {
-  id: string; // Unique slug for URL: e.g. 'sharma-family'
-  name: string; // Display name: e.g. 'Rajesh & Anjali Sharma'
-  salutation?: string; // e.g. 'Dear Uncle & Aunty' or 'Dear Rajesh & Anjali'
-  customNote?: string; // Special personal message from the couple
+  id: string; // Unique slug for URL: e.g. 'name-varun-tiwari'
+  name: string; // Display name for RSVP: e.g. 'Varun Tiwari' or 'Varun & Shweta Tiwari'
+  salutation: string; // e.g. 'Dear Varun', 'Dear Varun and Shweta', or 'Dear Tiwari Family'
+  customNote?: string; // Optional custom note
 }
 
 export interface EventConfig {
@@ -56,7 +56,6 @@ export interface EventConfig {
     };
     isLiveEnabled: boolean;
   };
-  guests: Record<string, GuestProfile>;
 }
 
 export const eventConfig: EventConfig = {
@@ -138,80 +137,146 @@ export const eventConfig: EventConfig = {
     },
     isLiveEnabled: true,
   },
-  guests: {
-    "sharma-family": {
-      id: "sharma-family",
-      name: "Rajesh & Anjali Sharma",
-      salutation: "Dear Rajesh & Anjali",
-      customNote: "Our 25-year milestone would not be complete without our dearest friends by our side! We can't wait to celebrate with you.",
-    },
-    "kapoor-couple": {
-      id: "kapoor-couple",
-      name: "Dr. Vikram & Neha Kapoor",
-      salutation: "Dear Vikram & Neha",
-      customNote: "From 25 years ago to today, thank you for sharing this beautiful journey with us!",
-    },
-    "gupta-family": {
-      id: "gupta-family",
-      name: "Sanjay & Meenakshi Gupta & Family",
-      salutation: "Dear Sanjay, Meenakshi & Kids",
-      customNote: "We are thrilled to celebrate this special evening surrounded by your love and warmth.",
-    },
-    "patel-couple": {
-      id: "patel-couple",
-      name: "Karan & Pooja Patel",
-      salutation: "Dear Karan & Pooja",
-      customNote: "Looking forward to creating more unforgettable memories together on our Silver Jubilee!",
-    },
-    "verma-family": {
-      id: "verma-family",
-      name: "Sunil & Ritu Verma",
-      salutation: "Dear Sunil & Ritu",
-      customNote: "Your presence and blessings will make our silver celebration truly special and complete.",
-    },
-    "vip-guest": {
-      id: "vip-guest",
-      name: "Special Guests & Family",
-      salutation: "Dear Honored Guests",
-      customNote: "We cordially invite you to celebrate 25 years of love and companionship with us.",
-    }
-  },
 };
 
+/**
+ * Extracts the first name from a full name string, ignoring common prefixes/honorifics.
+ * e.g. "Varun Tiwari" -> "Varun", "Dr. Varun Tiwari" -> "Varun", "Varun" -> "Varun"
+ */
+export function extractFirstName(fullName: string): string {
+  const trimmed = fullName.trim();
+  if (!trimmed) return "";
+  const parts = trimmed.split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "";
+
+  const honorifics = new Set(["dr", "dr.", "mr", "mr.", "mrs", "mrs.", "ms", "ms.", "prof", "prof.", "er", "er."]);
+  if (parts.length > 1 && honorifics.has(parts[0].toLowerCase())) {
+    return parts[1];
+  }
+  return parts[0];
+}
+
+/**
+ * Parses ?name= query param
+ * e.g. "?name=Varun Tiwari" ->
+ *   salutation: "Dear Varun"
+ *   RSVP name: "Varun Tiwari"
+ */
+export function parseName(nameParam: string): GuestProfile {
+  const trimmed = nameParam.trim();
+  const firstName = extractFirstName(trimmed);
+  const salutation = firstName ? `Dear ${firstName}` : "Dear Cherished Guest";
+  const slug = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+  return {
+    id: `name-${slug || "guest"}`,
+    name: trimmed,
+    salutation,
+  };
+}
+
+/**
+ * Parses ?couple= query param
+ * e.g. "?couple=Varun & Shweta Tiwari" ->
+ *   salutation: "Dear Varun and Shweta"
+ *   RSVP name: "Varun & Shweta Tiwari"
+ */
+export function parseCouple(coupleParam: string): GuestProfile {
+  const trimmed = coupleParam.trim();
+  // Split on '&', 'and', '+', '&amp;'
+  const splitRegex = /\s+(?:&|and|\+|&amp;)\s+|\s*&\s*|\s*\+\s*/i;
+  const parts = trimmed.split(splitRegex).filter(Boolean);
+
+  let salutation = `Dear ${trimmed}`;
+  if (parts.length >= 2) {
+    const first1 = extractFirstName(parts[0]);
+    const first2 = extractFirstName(parts[1]);
+    if (first1 && first2) {
+      salutation = `Dear ${first1} and ${first2}`;
+    }
+  } else if (parts.length === 1) {
+    const first = extractFirstName(parts[0]);
+    if (first) {
+      salutation = `Dear ${first}`;
+    }
+  }
+
+  const slug = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+  return {
+    id: `couple-${slug || "guests"}`,
+    name: trimmed,
+    salutation,
+  };
+}
+
+/**
+ * Parses ?family= query param
+ * e.g. "?family=Tiwari" or "?family=Tiwari Family" ->
+ *   salutation: "Dear Tiwari Family"
+ *   RSVP name: "Tiwari Family"
+ */
+export function parseFamily(familyParam: string): GuestProfile {
+  let cleaned = familyParam.trim();
+  // Remove leading "The " if present
+  cleaned = cleaned.replace(/^the\s+/i, "");
+  // Remove trailing "Family" if present so we don't end up with "Tiwari Family Family"
+  cleaned = cleaned.replace(/\s+family$/i, "");
+
+  const displayName = cleaned ? `${cleaned} Family` : "Family";
+  const salutation = `Dear ${displayName}`;
+  const slug = displayName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+  return {
+    id: `family-${slug || "guests"}`,
+    name: displayName,
+    salutation,
+  };
+}
+
+/**
+ * Extracts and constructs guest profile dynamically from URL search params.
+ * Priority:
+ * 1. ?couple=
+ * 2. ?family=
+ * 3. ?name=
+ * Fallback: General invitation
+ */
 export function getGuestFromUrl(): GuestProfile {
   if (typeof window === "undefined") {
     return {
       id: "general",
       name: "Cherished Friends & Family",
       salutation: "Dear Cherished Guests",
+      customNote: "Together with our families, we joyfully request the pleasure of your company as we celebrate 25 years of cherished love, friendship, and togetherness.",
     };
   }
 
   const searchParams = new URLSearchParams(window.location.search);
-  const guestParam = searchParams.get("guest") || searchParams.get("id") || searchParams.get("g");
 
-  if (guestParam && eventConfig.guests[guestParam]) {
-    return eventConfig.guests[guestParam];
+  // 1. Check ?couple=
+  const coupleParam = searchParams.get("couple");
+  if (coupleParam && coupleParam.trim()) {
+    return parseCouple(coupleParam);
   }
 
-  const customNameParam = searchParams.get("name");
-  if (customNameParam) {
-    return {
-      id: "custom-" + encodeURIComponent(customNameParam.toLowerCase().replace(/\s+/g, "-")),
-      name: customNameParam,
-      salutation: `Dear ${customNameParam}`,
-    };
+  // 2. Check ?family=
+  const familyParam = searchParams.get("family");
+  if (familyParam && familyParam.trim()) {
+    return parseFamily(familyParam);
   }
 
-  const hash = window.location.hash.replace(/^#/, "");
-  if (hash && eventConfig.guests[hash]) {
-    return eventConfig.guests[hash];
+  // 3. Check ?name=
+  const nameParam = searchParams.get("name");
+  if (nameParam && nameParam.trim()) {
+    return parseName(nameParam);
   }
 
+  // Fallback: General Invitation
   return {
     id: "general",
     name: "Cherished Friends & Family",
     salutation: "Dear Cherished Guests",
-    customNote: "We request the honor of your presence to celebrate 25 years of love, laughter, and lifelong memories.",
+    customNote: "Together with our families, we joyfully request the pleasure of your company as we celebrate 25 years of cherished love, friendship, and togetherness.",
   };
 }

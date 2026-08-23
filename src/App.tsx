@@ -8,13 +8,13 @@ import { EventDetails } from "./components/EventDetails";
 import { Timeline } from "./components/Timeline";
 import { DressCode } from "./components/DressCode";
 import { RsvpForm } from "./components/RsvpForm";
-import { GuestLinkGeneratorModal } from "./components/GuestLinkGeneratorModal";
+
 import { MusicPlayer } from "./components/MusicPlayer";
 import { Footer } from "./components/Footer";
 
 export function App() {
   const [currentGuest, setCurrentGuest] = useState<GuestProfile>(getGuestFromUrl());
-  const [isGuestModalOpen, setIsGuestModalOpen] = useState<boolean>(false);
+
 
   useEffect(() => {
     // Listen to hash / query changes if user navigates
@@ -62,12 +62,7 @@ export function App() {
       {/* Ambient Audio Player */}
       <MusicPlayer />
 
-      {/* Modals */}
-      <GuestLinkGeneratorModal
-        isOpen={isGuestModalOpen}
-        onClose={() => setIsGuestModalOpen(false)}
-        onSelectGuest={(guest) => setCurrentGuest(guest)}
-      />
+
     </div>
   );
 }
