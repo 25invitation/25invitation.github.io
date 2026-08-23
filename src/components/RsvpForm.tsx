@@ -7,6 +7,7 @@ import {
   Send,
   RotateCcw,
   Check,
+  Phone,
 } from "lucide-react";
 import { MandalaDivider, DiyaLight } from "./IndianMotifs";
 
@@ -27,6 +28,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
     isGeneralGuest ? "" : currentGuest.name
   );
   const [guestCount, setGuestCount] = useState<number>(2);
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -92,6 +94,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
         params.append(googleForms.fieldEntries.guestName, guestName);
         params.append(googleForms.fieldEntries.attending, attending === "yes" ? "Yes" : "No");
         params.append(googleForms.fieldEntries.guestCount, attending === "yes" ? String(guestCount) : "0");
+        params.append(googleForms.fieldEntries.phoneNumber, attending === "yes" ? phoneNumber : "");
         params.append(googleForms.fieldEntries.message, message);
 
         // Submit via no-cors POST with URLSearchParams
@@ -114,6 +117,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
         name: guestName,
         attending,
         count: attending === "yes" ? guestCount : 0,
+        phoneNumber: attending === "yes" ? phoneNumber : "",
         message,
         timestamp: new Date().toISOString(),
       };
@@ -313,6 +317,26 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                       +
                     </button>
                   </div>
+                </div>
+
+                {/* Phone Number for Reminders */}
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                    Phone Number (for reminders & contact)
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder="e.g. (408) 555-1234"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-600/60 text-white placeholder-slate-500 focus:outline-none focus:border-slate-300 focus:ring-1 focus:ring-slate-300 text-sm sm:text-base transition-all"
+                    />
+                  </div>
+                  <p className="mt-1 text-[11px] text-slate-500 italic">
+                    We'll only use this to send event reminders and updates.
+                  </p>
                 </div>
               </div>
             )}

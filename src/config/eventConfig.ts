@@ -52,6 +52,7 @@ export interface EventConfig {
       guestName: string;
       attending: string;
       guestCount: string;
+      phoneNumber: string;
       message: string;
     };
     isLiveEnabled: boolean;
@@ -133,6 +134,7 @@ export const eventConfig: EventConfig = {
       guestName: "entry.1537876543",
       attending: "entry.1990115148",
       guestCount: "entry.2077372707",
+      phoneNumber: "entry.PHONE_NUMBER",
       message: "entry.1521333215",
     },
     isLiveEnabled: true,
@@ -235,6 +237,57 @@ export function parseFamily(familyParam: string): GuestProfile {
 }
 
 /**
+ * Known query parameter keys used by this application.
+ * Used to distinguish real parameter boundaries from literal '&' in values.
+ */
+const KNOWN_PARAM_KEYS = ["couple", "family", "name"];
+
+/**
+ * Extracts the raw value of a query parameter from the URL search string,
+ * tolerating unencoded '&' characters within the value.
+ *
+ * Standard URLSearchParams treats every '&' as a parameter separator, which
+ * breaks inputs like "?couple=John & Jane Smith" (parsed as couple="John ",
+ * with " Jane Smith" becoming a separate key). This helper only splits on '&'
+ * when it is immediately followed by a known parameter key and '=', treating
+ * all other '&' as literal parts of the value.
+ *
+ * @param search - The raw query string (window.location.search), e.g. "?couple=John & Jane Smith"
+ * @param key    - The parameter key to extract, e.g. "couple"
+ * @returns The decoded value, or null if the key is not present.
+ */
+export function getRawParam(search: string, key: string): string | null {
+  // Strip leading '?'
+  const qs = search.startsWith("?") ? search.slice(1) : search;
+  if (!qs) return null;
+
+  // Build a regex that splits only on '&' followed by a known param key and '='
+  // e.g. splits on "&family=" or "&name=" but NOT on "& Jane"
+  const knownBoundary = new RegExp(
+    `&(?=${KNOWN_PARAM_KEYS.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})=`,
+    "i"
+  );
+  const segments = qs.split(knownBoundary);
+
+  for (const segment of segments) {
+    const eqIdx = segment.indexOf("=");
+    if (eqIdx === -1) continue;
+    const segKey = segment.slice(0, eqIdx).trim();
+    if (segKey.toLowerCase() === key.toLowerCase()) {
+      const rawValue = segment.slice(eqIdx + 1);
+      // Decode percent-encoded characters (e.g. %26 -> &, %20 -> space)
+      try {
+        return decodeURIComponent(rawValue);
+      } catch {
+        return rawValue;
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
  * Extracts and constructs guest profile dynamically from URL search params.
  * Priority:
  * 1. ?couple=
@@ -252,22 +305,22 @@ export function getGuestFromUrl(): GuestProfile {
     };
   }
 
-  const searchParams = new URLSearchParams(window.location.search);
+  const rawSearch = window.location.search;
 
-  // 1. Check ?couple=
-  const coupleParam = searchParams.get("couple");
+  // 1. Check ?couple= (use raw parsing to handle unencoded '&')
+  const coupleParam = getRawParam(rawSearch, "couple");
   if (coupleParam && coupleParam.trim()) {
     return parseCouple(coupleParam);
   }
 
   // 2. Check ?family=
-  const familyParam = searchParams.get("family");
+  const familyParam = getRawParam(rawSearch, "family");
   if (familyParam && familyParam.trim()) {
     return parseFamily(familyParam);
   }
 
   // 3. Check ?name=
-  const nameParam = searchParams.get("name");
+  const nameParam = getRawParam(rawSearch, "name");
   if (nameParam && nameParam.trim()) {
     return parseName(nameParam);
   }
