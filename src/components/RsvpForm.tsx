@@ -225,8 +225,8 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                   type="button"
                   onClick={() => setAttending("yes")}
                   className={`relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${attending === "yes"
-                      ? "bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300 text-slate-950 border-white shadow-[0_0_25px_rgba(226,232,240,0.5)] scale-[1.02]"
-                      : "bg-slate-900/70 border-slate-700/80 text-slate-200 hover:border-slate-400/50 hover:bg-slate-800/60"
+                    ? "bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300 text-slate-950 border-white shadow-[0_0_25px_rgba(226,232,240,0.5)] scale-[1.02]"
+                    : "bg-slate-900/70 border-slate-700/80 text-slate-200 hover:border-slate-400/50 hover:bg-slate-800/60"
                     }`}
                 >
                   <CheckCircle2
@@ -248,8 +248,8 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                   type="button"
                   onClick={() => setAttending("no")}
                   className={`relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${attending === "no"
-                      ? "bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 text-rose-200 border-rose-400/60 shadow-[0_0_20px_rgba(244,63,94,0.3)] scale-[1.02]"
-                      : "bg-slate-900/70 border-slate-700/80 text-slate-200 hover:border-slate-400/50 hover:bg-slate-800/60"
+                    ? "bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 text-rose-200 border-rose-400/60 shadow-[0_0_20px_rgba(244,63,94,0.3)] scale-[1.02]"
+                    : "bg-slate-900/70 border-slate-700/80 text-slate-200 hover:border-slate-400/50 hover:bg-slate-800/60"
                     }`}
                 >
                   <XCircle
@@ -330,9 +330,6 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                       className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-600/60 text-white placeholder-slate-500 focus:outline-none focus:border-slate-300 focus:ring-1 focus:ring-slate-300 text-sm sm:text-base transition-all"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500 italic">
-                    We'll only use this to send event reminders and updates.
-                  </p>
                 </div>
               </div>
             )}
