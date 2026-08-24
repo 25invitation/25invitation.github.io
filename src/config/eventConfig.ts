@@ -72,8 +72,8 @@ export const eventConfig: EventConfig = {
     title: "The Silver Jubilee Celebration",
     subtitle: "25 Years of Togetherness",
     date: "Sunday, September 6, 2026",
-    isoDate: "2026-09-06T18:30:00",
-    time: "6:30 PM Onwards",
+    isoDate: "2026-09-06T17:30:00",
+    time: "5:30 PM Onwards",
     venueName: "Shubham Hall",
     venueHall: "Grand Ballroom",
     address: "1214 Apollo Way",
@@ -83,13 +83,13 @@ export const eventConfig: EventConfig = {
       title: "Kshitiz & Sakshi's 25th Silver Jubilee Anniversary Celebration",
       description: "Join us in celebrating 25 years of love and togetherness with Kshitiz & Sakshi! Dress code: Silver Jubilee Glam & Indian Festive.",
       location: "Shubham Hall, 1214 Apollo Way, Sunnyvale, CA 94085",
-      startTime: "20260907T013000Z", // 6:30 PM PDT
+      startTime: "20260907T003000Z", // 5:30 PM PDT
       endTime: "20260907T063000Z",
     },
   },
   timeline: [
     {
-      time: "6:30 PM",
+      time: "5:30 PM",
       title: "Swagat & Welcome Reception",
       description: "Welcoming guests with celebratory mocktails, traditional music, and appetizers.",
       icon: "PartyPopper",
