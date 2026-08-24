@@ -155,7 +155,7 @@ export const HeroScrollTransform: React.FC = () => {
       <div className="w-full max-w-xl text-center z-30 pt-1">
         <div className="inline-flex items-center gap-2 px-3.5 py-0.5 rounded-full bg-slate-950/80 border border-slate-400/40 text-slate-200 text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase mb-1 shadow-md backdrop-blur-md">
           <Sparkles className="w-3 h-3 text-amber-300" />
-          <span>25th Silver Jubilee Celebration</span>
+          <span>25th Wedding Anniversary Celebration</span>
           <Sparkles className="w-3 h-3 text-amber-300" />
         </div>
 
