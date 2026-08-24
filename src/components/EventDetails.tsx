@@ -81,7 +81,7 @@ export const EventDetails: React.FC = () => {
             </p>
 
             <p className="text-xs text-slate-300/80 leading-relaxed">
-              Cocktails &amp; Swagat commence promptly at 5:30 PM. Formal celebrations and toast begin at 7:30 PM.
+              Formal celebrations and Swagat begin promptly at 5:30 PM.
             </p>
           </div>
 

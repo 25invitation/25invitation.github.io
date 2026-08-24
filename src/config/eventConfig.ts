@@ -34,7 +34,6 @@ export interface EventConfig {
     };
   };
   timeline: Array<{
-    time: string;
     title: string;
     description: string;
     icon: string;
@@ -89,25 +88,21 @@ export const eventConfig: EventConfig = {
   },
   timeline: [
     {
-      time: "5:30 PM",
       title: "Swagat & Welcome Reception",
       description: "Welcoming guests with celebratory mocktails, traditional music, and appetizers.",
       icon: "PartyPopper",
     },
     {
-      time: "7:30 PM",
       title: "Silver Vows & Milestone Toast",
       description: "Renewal of vows, silver milestone cake cutting, and memory walkthrough.",
       icon: "Heart",
     },
     {
-      time: "8:15 PM",
       title: "Sangeet & Dance Performances",
       description: "Musical tributes, special family performances, and open dance floor.",
       icon: "Music",
     },
     {
-      time: "9:15 PM",
       title: "Shahi Dawat (Celebration Dinner)",
       description: "A lavish Indian banquet feast featuring signature regional delicacies and desserts.",
       icon: "Utensils",

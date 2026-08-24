@@ -20,7 +20,7 @@ export const Timeline: React.FC = () => {
           Evening Itinerary
         </span>
         <h2 className="text-2xl sm:text-4xl font-serif silver-text-gradient font-bold tracking-tight mt-1">
-          Celebration Timeline
+          Celebration Events
         </h2>
         <MandalaDivider className="my-2" />
         <p className="text-xs sm:text-sm text-slate-300 font-editorial italic max-w-md">
@@ -38,10 +38,7 @@ export const Timeline: React.FC = () => {
 
             {/* Event Item Card */}
             <div className="p-5 sm:p-6 rounded-2xl card-glass silver-shimmer-border group-hover:border-slate-300/50 transition-all duration-300 shadow-md">
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                <span className="px-3 py-1 rounded-full bg-slate-800/90 border border-slate-500/30 text-xs font-bold text-amber-200 tracking-wider">
-                  {item.time}
-                </span>
+              <div className="flex justify-end mb-2">
                 <div className="p-2 rounded-xl bg-slate-800/60 border border-slate-700">
                   {iconMap[item.icon] || <Sparkles className="w-5 h-5 text-slate-300" />}
                 </div>
