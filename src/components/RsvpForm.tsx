@@ -140,7 +140,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
   return (
     <section id="rsvp-section" className="w-full max-w-3xl mx-auto px-4 py-12">
       <div className="relative rounded-3xl p-6 sm:p-10 card-glass silver-shimmer-border overflow-hidden shadow-2xl">
-        
+
         {/* Shimmer Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-400/5 via-transparent to-amber-200/5 pointer-events-none" />
 
@@ -212,7 +212,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
         ) : (
           /* Interactive RSVP Form */
           <form onSubmit={handleSubmit} className="space-y-6">
-            
+
             {/* Step 1: Yes or No Attendance Buttons */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 text-center mb-3">
@@ -224,16 +224,14 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                 <button
                   type="button"
                   onClick={() => setAttending("yes")}
-                  className={`relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
-                    attending === "yes"
+                  className={`relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${attending === "yes"
                       ? "bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300 text-slate-950 border-white shadow-[0_0_25px_rgba(226,232,240,0.5)] scale-[1.02]"
                       : "bg-slate-900/70 border-slate-700/80 text-slate-200 hover:border-slate-400/50 hover:bg-slate-800/60"
-                  }`}
+                    }`}
                 >
                   <CheckCircle2
-                    className={`w-6 h-6 ${
-                      attending === "yes" ? "text-emerald-700 fill-emerald-100" : "text-slate-400"
-                    }`}
+                    className={`w-6 h-6 ${attending === "yes" ? "text-emerald-700 fill-emerald-100" : "text-slate-400"
+                      }`}
                   />
                   <div className="text-left">
                     <div className="font-serif font-bold text-base sm:text-lg">
@@ -249,16 +247,14 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                 <button
                   type="button"
                   onClick={() => setAttending("no")}
-                  className={`relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
-                    attending === "no"
+                  className={`relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${attending === "no"
                       ? "bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 text-rose-200 border-rose-400/60 shadow-[0_0_20px_rgba(244,63,94,0.3)] scale-[1.02]"
                       : "bg-slate-900/70 border-slate-700/80 text-slate-200 hover:border-slate-400/50 hover:bg-slate-800/60"
-                  }`}
+                    }`}
                 >
                   <XCircle
-                    className={`w-6 h-6 ${
-                      attending === "no" ? "text-rose-400" : "text-slate-400"
-                    }`}
+                    className={`w-6 h-6 ${attending === "no" ? "text-rose-400" : "text-slate-400"
+                      }`}
                   />
                   <div className="text-left">
                     <div className="font-serif font-bold text-base sm:text-lg">
@@ -322,7 +318,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                 {/* Phone Number for Reminders */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                    Phone Number (for reminders & contact)
+                    Phone Number
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
