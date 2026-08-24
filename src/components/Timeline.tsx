@@ -38,15 +38,14 @@ export const Timeline: React.FC = () => {
 
             {/* Event Item Card */}
             <div className="p-5 sm:p-6 rounded-2xl card-glass silver-shimmer-border group-hover:border-slate-300/50 transition-all duration-300 shadow-md">
-              <div className="flex justify-end mb-2">
+              <div className="flex items-start justify-between gap-3 mb-1">
+                <h3 className="text-lg sm:text-xl font-serif font-bold text-slate-100">
+                  {item.title}
+                </h3>
                 <div className="p-2 rounded-xl bg-slate-800/60 border border-slate-700">
                   {iconMap[item.icon] || <Sparkles className="w-5 h-5 text-slate-300" />}
                 </div>
               </div>
-
-              <h3 className="text-lg sm:text-xl font-serif font-bold text-slate-100 mb-1">
-                {item.title}
-              </h3>
 
               <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed font-sans">
                 {item.description}
