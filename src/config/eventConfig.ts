@@ -103,8 +103,8 @@ export const eventConfig: EventConfig = {
       icon: "Music",
     },
     {
-      title: "Shahi Dawat (Celebration Dinner)",
-      description: "A lavish Indian banquet feast featuring signature regional delicacies and desserts.",
+      title: "Dinner",
+      description: "Dinner will be served.",
       icon: "Utensils",
     },
   ],

@@ -285,13 +285,14 @@ export const HeroScrollTransform: React.FC = () => {
         <div className="absolute bottom-6 sm:bottom-8 left-1/2 z-40 -translate-x-1/2">
         <button
           onClick={handleUnlockClick}
-          className={`p-2 rounded-full border transition-all duration-300 shadow-lg cursor-pointer ${
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-full border transition-all duration-300 shadow-lg cursor-pointer animate-bounce ${
             morphValue >= 0.95
-              ? "bg-gradient-to-r from-slate-200 to-slate-400 text-slate-950 border-white animate-bounce scale-105"
+              ? "bg-gradient-to-r from-slate-200 to-slate-400 text-slate-950 border-white scale-105"
               : "bg-slate-900/80 text-slate-300 border-slate-400/40 hover:bg-slate-800"
           }`}
           aria-label={morphValue < 1 ? "Transform photo" : "Scroll to invitation"}
         >
+          <span className="text-xs font-semibold tracking-wide">Scroll Down</span>
           <ChevronDown className="w-4 h-4" />
         </button>
         </div>
