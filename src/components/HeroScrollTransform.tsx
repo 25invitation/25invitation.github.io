@@ -280,10 +280,9 @@ export const HeroScrollTransform: React.FC = () => {
             <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/0 via-white/10 to-white/0 mix-blend-overlay" />
           </div>
         </div>
-      </div>
 
-      {/* Bottom Subtle Navigation Indicator */}
-      <div className="flex flex-col items-center text-center z-30 pb-2 -translate-y-8 sm:-translate-y-10">
+        {/* Kept over the photo so it stays in view on short screens. */}
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 z-40 -translate-x-1/2">
         <button
           onClick={handleUnlockClick}
           className={`p-2 rounded-full border transition-all duration-300 shadow-lg cursor-pointer ${
@@ -295,6 +294,7 @@ export const HeroScrollTransform: React.FC = () => {
         >
           <ChevronDown className="w-4 h-4" />
         </button>
+        </div>
       </div>
     </section>
   );
