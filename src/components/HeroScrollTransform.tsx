@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { eventConfig } from "../config/eventConfig";
 import { Sparkles, ChevronDown } from "lucide-react";
 import { RoyalFrameCorner } from "./IndianMotifs";
@@ -12,6 +12,66 @@ export const HeroScrollTransform: React.FC = () => {
   const isUnlockedRef = useRef<boolean>(false);
   const isAnimatingRef = useRef<boolean>(false);
   const morphValueRef = useRef<number>(0);
+  const lockedScrollY = useRef<number>(0);
+  const originalScrollStyles = useRef<Record<string, string> | null>(null);
+  const unlockTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const lockPageScroll = useCallback(() => {
+    const { body, documentElement } = document;
+
+    if (originalScrollStyles.current) return;
+
+    lockedScrollY.current = window.scrollY;
+    originalScrollStyles.current = {
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyLeft: body.style.left,
+      bodyRight: body.style.right,
+      bodyWidth: body.style.width,
+      bodyTouchAction: body.style.touchAction,
+      htmlOverflow: documentElement.style.overflow,
+      htmlOverscrollBehavior: documentElement.style.overscrollBehavior,
+    };
+
+    // `overflow: hidden` alone is ignored by some iOS and in-app browsers.
+    // Fixing the body in place prevents the visual viewport from moving too.
+    documentElement.style.overflow = "hidden";
+    documentElement.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${lockedScrollY.current}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.touchAction = "none";
+  }, []);
+
+  const restorePageScroll = useCallback(() => {
+    const { body, documentElement } = document;
+    const original = originalScrollStyles.current;
+
+    if (original) {
+      body.style.overflow = original.bodyOverflow;
+      body.style.position = original.bodyPosition;
+      body.style.top = original.bodyTop;
+      body.style.left = original.bodyLeft;
+      body.style.right = original.bodyRight;
+      body.style.width = original.bodyWidth;
+      body.style.touchAction = original.bodyTouchAction;
+      documentElement.style.overflow = original.htmlOverflow;
+      documentElement.style.overscrollBehavior = original.htmlOverscrollBehavior;
+      originalScrollStyles.current = null;
+    }
+
+    window.scrollTo(0, lockedScrollY.current);
+  }, []);
+
+  const unlockPageScroll = useCallback(() => {
+    restorePageScroll();
+    isUnlockedRef.current = true;
+    setIsUnlocked(true);
+  }, [restorePageScroll]);
 
   // Keep refs in sync with state for event listeners
   useEffect(() => {
@@ -31,12 +91,12 @@ export const HeroScrollTransform: React.FC = () => {
     if (isAnimatingRef.current || morphValueRef.current >= 1) {
       if (morphValueRef.current >= 1 && !isUnlockedRef.current) {
         // Already transformed, unlock scrolling
-        setIsUnlocked(true);
-        document.body.style.overflow = "auto";
+        unlockPageScroll();
       }
       return;
     }
 
+    isAnimatingRef.current = true;
     setIsAnimating(true);
     const startTime = performance.now();
     const duration = 650; // Smooth 650ms transition
@@ -51,17 +111,19 @@ export const HeroScrollTransform: React.FC = () => {
           ? 2 * progress * progress
           : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
+      morphValueRef.current = eased;
       setMorphValue(eased);
 
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
         setMorphValue(1);
+        morphValueRef.current = 1;
+        isAnimatingRef.current = false;
         setIsAnimating(false);
         // After transformation finishes, unlock page scrolling
-        setTimeout(() => {
-          setIsUnlocked(true);
-          document.body.style.overflow = "auto";
+        unlockTimer.current = setTimeout(() => {
+          unlockPageScroll();
         }, 150);
       }
     };
@@ -73,19 +135,13 @@ export const HeroScrollTransform: React.FC = () => {
   useEffect(() => {
     // Start locked at the top
     window.scrollTo(0, 0);
-    document.body.style.overflow = "hidden";
+    lockPageScroll();
 
     const handleWheel = (e: WheelEvent) => {
-      // If still locked at top:
       if (!isUnlockedRef.current) {
+        e.preventDefault();
         if (e.deltaY > 5) {
-          e.preventDefault();
           triggerTransformation();
-        }
-      } else {
-        // If user scrolls all the way back to top and rolls up, allow re-locking if desired
-        if (window.scrollY === 0 && e.deltaY < -40 && morphValueRef.current === 1) {
-          // Keep unlocked or let them scroll naturally
         }
       }
     };
@@ -98,11 +154,10 @@ export const HeroScrollTransform: React.FC = () => {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!isUnlockedRef.current) {
+        if (e.cancelable) e.preventDefault();
         if (e.touches.length > 0) {
           const deltaY = touchStartY.current - e.touches[0].clientY;
           if (deltaY > 10) {
-            // User attempted to swipe/scroll down -> prevent scroll, transform image first!
-            if (e.cancelable) e.preventDefault();
             triggerTransformation();
           }
         }
@@ -111,33 +166,33 @@ export const HeroScrollTransform: React.FC = () => {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isUnlockedRef.current) {
-        if (["ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) {
+        if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " ", "Enter"].includes(e.key)) {
           e.preventDefault();
           triggerTransformation();
         }
       }
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-    window.addEventListener("keydown", handleKeyDown, { passive: false });
+    document.addEventListener("wheel", handleWheel, { passive: false });
+    document.addEventListener("touchstart", handleTouchStart, { passive: true });
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    document.addEventListener("keydown", handleKeyDown, { passive: false });
 
     return () => {
-      document.body.style.overflow = "auto";
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("keydown", handleKeyDown);
+      if (unlockTimer.current) clearTimeout(unlockTimer.current);
+      restorePageScroll();
+      document.removeEventListener("wheel", handleWheel);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [lockPageScroll, restorePageScroll]);
 
   const handleUnlockClick = () => {
     if (morphValue < 1) {
       triggerTransformation();
     } else {
-      setIsUnlocked(true);
-      document.body.style.overflow = "auto";
+      unlockPageScroll();
       const nextEl = document.getElementById("invitation-start");
       if (nextEl) {
         nextEl.scrollIntoView({ behavior: "smooth" });
@@ -228,7 +283,7 @@ export const HeroScrollTransform: React.FC = () => {
       </div>
 
       {/* Bottom Subtle Navigation Indicator */}
-      <div className="flex flex-col items-center text-center z-30 pb-2">
+      <div className="flex flex-col items-center text-center z-30 pb-2 -translate-y-8 sm:-translate-y-10">
         <button
           onClick={handleUnlockClick}
           className={`p-2 rounded-full border transition-all duration-300 shadow-lg cursor-pointer ${
