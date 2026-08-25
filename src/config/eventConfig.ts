@@ -173,6 +173,20 @@ export function parseName(nameParam: string): GuestProfile {
 }
 
 /**
+ * Parses ?special= query param without changing its display text.
+ * The supplied value is used verbatim for the envelope, greeting, and RSVP.
+ */
+export function parseSpecial(specialParam: string): GuestProfile {
+  const slug = specialParam.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+  return {
+    id: `special-${slug || "guest"}`,
+    name: specialParam,
+    salutation: specialParam,
+  };
+}
+
+/**
  * Parses ?couple= query param
  * e.g. "?couple=Varun & Shweta Tiwari" ->
  *   salutation: "Dear Varun and Shweta"
@@ -235,7 +249,7 @@ export function parseFamily(familyParam: string): GuestProfile {
  * Known query parameter keys used by this application.
  * Used to distinguish real parameter boundaries from literal '&' in values.
  */
-const KNOWN_PARAM_KEYS = ["couple", "family", "name"];
+const KNOWN_PARAM_KEYS = ["special", "couple", "family", "name"];
 
 /**
  * Extracts the raw value of a query parameter from the URL search string,
@@ -285,9 +299,10 @@ export function getRawParam(search: string, key: string): string | null {
 /**
  * Extracts and constructs guest profile dynamically from URL search params.
  * Priority:
- * 1. ?couple=
- * 2. ?family=
- * 3. ?name=
+ * 1. ?special=
+ * 2. ?couple=
+ * 3. ?family=
+ * 4. ?name=
  * Fallback: General invitation
  */
 export function getGuestFromUrl(): GuestProfile {
@@ -302,19 +317,25 @@ export function getGuestFromUrl(): GuestProfile {
 
   const rawSearch = window.location.search;
 
-  // 1. Check ?couple= (use raw parsing to handle unencoded '&')
+  // 1. Check ?special= and retain the value exactly as supplied.
+  const specialParam = getRawParam(rawSearch, "special");
+  if (specialParam && specialParam.trim()) {
+    return parseSpecial(specialParam);
+  }
+
+  // 2. Check ?couple= (use raw parsing to handle unencoded '&')
   const coupleParam = getRawParam(rawSearch, "couple");
   if (coupleParam && coupleParam.trim()) {
     return parseCouple(coupleParam);
   }
 
-  // 2. Check ?family=
+  // 3. Check ?family=
   const familyParam = getRawParam(rawSearch, "family");
   if (familyParam && familyParam.trim()) {
     return parseFamily(familyParam);
   }
 
-  // 3. Check ?name=
+  // 4. Check ?name=
   const nameParam = getRawParam(rawSearch, "name");
   if (nameParam && nameParam.trim()) {
     return parseName(nameParam);
