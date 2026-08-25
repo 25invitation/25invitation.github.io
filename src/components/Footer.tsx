@@ -6,7 +6,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="relative w-full border-t border-slate-700/50 bg-[#070811] py-14 px-4 text-center overflow-hidden">
       <div className="max-w-3xl mx-auto flex flex-col items-center space-y-4">
-        
+
         <div className="flex items-center gap-3">
           <DiyaLight />
           <span className="text-xs uppercase tracking-[0.35em] text-slate-400 font-semibold">
@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <h3 className="text-2xl sm:text-3xl font-serif silver-text-gradient font-bold tracking-tight">
-          {eventConfig.couple.partner1} &amp; {eventConfig.couple.partner2}
+          Saksham & Samarth
         </h3>
 
         <p className="text-xs sm:text-sm italic font-editorial text-slate-300 max-w-md">
