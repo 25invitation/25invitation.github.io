@@ -19,7 +19,7 @@ export const Footer: React.FC = () => {
         </h3>
 
         <p className="text-xs sm:text-sm italic font-editorial text-slate-300 max-w-md">
-          "Thank you for being an indispensable part of our 25-year journey. We look forward to creating everlasting memories with you."
+          "Thank you for being an indispensable part of our parents' 25-year journey. We look forward to creating everlasting memories with you."
         </p>
 
         <MandalaDivider className="my-2" />
