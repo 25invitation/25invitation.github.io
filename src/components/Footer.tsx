@@ -1,5 +1,4 @@
 import React from "react";
-import { eventConfig } from "../config/eventConfig";
 import { MandalaDivider, DiyaLight } from "./IndianMotifs";
 
 export const Footer: React.FC = () => {
@@ -16,7 +15,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <h3 className="text-2xl sm:text-3xl font-serif silver-text-gradient font-bold tracking-tight">
-          {eventConfig.couple.partner1} &amp; {eventConfig.couple.partner2}
+          Saksham &amp; Samarth
         </h3>
 
         <p className="text-xs sm:text-sm italic font-editorial text-slate-300 max-w-md">
