@@ -109,11 +109,11 @@ export const eventConfig: EventConfig = {
     },
   ],
   dressCode: {
-    theme: "Silver Jubilee Glam & Indian Festive",
-    description: "Embrace the sparkle! Shimmering silvers, metallic accents, festive sarees, sherwanis, and Indo-Western attire.",
+    theme: "Silver Jubilee Glam",
+    description: "",
     suggestions: [
-      "Women: Silver or Metallic Sarees, Lehengas, Sequinned Anarkalis, or Elegant Evening Wear",
-      "Men: Bandhgalas, Embroidered Kurtas with Silver Accents, or Suits",
+      "Women: Party Sarees, Lehengas, or Anarkalis (avoid pink)",
+      "Men: Suits and Dinner Jackets",
     ],
     palette: [
       { name: "Pure Silver Foil", hex: "#E2E8F0", desc: "Shimmer & Sparkle" },
