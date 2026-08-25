@@ -89,12 +89,12 @@ export const eventConfig: EventConfig = {
   timeline: [
     {
       title: "Swagat & Welcome Reception",
-      description: "Welcoming guests with celebratory mocktails, traditional music, and appetizers.",
+      description: "Welcoming guests with celebratory mocktails, cocktails, and appetizers.",
       icon: "PartyPopper",
     },
     {
-      title: "Silver Vows & Milestone Toast",
-      description: "Renewal of vows, silver milestone cake cutting, and memory walkthrough.",
+      title: "Milestone Toast",
+      description: "Silver milestone cake cutting, and memory walkthrough.",
       icon: "Heart",
     },
     {
