@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getGuestFromUrl, type GuestProfile } from "./config/eventConfig";
 import { TinselSparkles } from "./components/TinselSparkles";
 import { HeroScrollTransform } from "./components/HeroScrollTransform";
@@ -9,11 +9,20 @@ import { Timeline } from "./components/Timeline";
 import { DressCode } from "./components/DressCode";
 import { RsvpForm } from "./components/RsvpForm";
 
-import { MusicPlayer } from "./components/MusicPlayer";
+import { MusicPlayer, type MusicPlayerHandle } from "./components/MusicPlayer";
 import { Footer } from "./components/Footer";
+import { EnvelopeGate } from "./components/EnvelopeGate";
 
 export function App() {
   const [currentGuest, setCurrentGuest] = useState<GuestProfile>(getGuestFromUrl());
+  const [isInvitationOpen, setIsInvitationOpen] = useState(false);
+  const musicPlayerRef = useRef<MusicPlayerHandle>(null);
+
+  const openInvitation = () => {
+    // Calling this in the click handler preserves the browser's user gesture for audio playback.
+    musicPlayerRef.current?.play();
+    setIsInvitationOpen(true);
+  };
 
 
   useEffect(() => {
@@ -27,6 +36,9 @@ export function App() {
 
   return (
     <div className="relative min-h-screen bg-[#080a14] text-slate-100 selection:bg-slate-300 selection:text-slate-950 font-sans">
+      {!isInvitationOpen && (
+        <EnvelopeGate guest={currentGuest} onOpen={openInvitation} />
+      )}
       {/* Background Interactive Tinsel & Silver Sparkle Particle Canvas */}
       <TinselSparkles />
 
@@ -60,7 +72,7 @@ export function App() {
       <Footer />
 
       {/* Ambient Audio Player */}
-      <MusicPlayer />
+      <MusicPlayer ref={musicPlayerRef} shouldPlay={isInvitationOpen} />
 
 
     </div>

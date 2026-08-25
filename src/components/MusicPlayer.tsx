@@ -1,51 +1,55 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Music, Volume2, VolumeX } from "lucide-react";
 
-const videoId = "lggEDxM14jY";
-const youtubeOrigin = "https://www.youtube.com";
+const audioSource = "/audio/celebration.webm";
 
-export const MusicPlayer: React.FC = () => {
+interface MusicPlayerProps {
+  shouldPlay: boolean;
+}
+
+export interface MusicPlayerHandle {
+  play: () => void;
+}
+
+export const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(({ shouldPlay }, ref) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const playerRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<HTMLAudioElement>(null);
 
-  const playerUrl = useMemo(() => {
-    const params = new URLSearchParams({
-      autoplay: "0",
-      controls: "0",
-      enablejsapi: "1",
-      loop: "1",
-      modestbranding: "1",
-      playlist: videoId,
-      playsinline: "1",
-      rel: "0",
-    });
+  const play = useCallback(() => {
+    const player = playerRef.current;
+    if (!player) return;
 
-    if (window.location.origin) params.set("origin", window.location.origin);
-    return `${youtubeOrigin}/embed/${videoId}?${params.toString()}`;
+    void player.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
   }, []);
 
-  const sendPlayerCommand = useCallback((func: "playVideo" | "pauseVideo") => {
-    playerRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: "command", func, args: [] }),
-      youtubeOrigin,
-    );
+  const pause = useCallback(() => {
+    playerRef.current?.pause();
+    setIsPlaying(false);
   }, []);
 
   const toggleMusic = () => {
-    const nextIsPlaying = !isPlaying;
-    sendPlayerCommand(nextIsPlaying ? "playVideo" : "pauseVideo");
-    setIsPlaying(nextIsPlaying);
+    if (isPlaying) {
+      pause();
+    } else {
+      play();
+    }
   };
+
+  useImperativeHandle(ref, () => ({ play }), [play]);
+
+  useEffect(() => {
+    if (shouldPlay) play();
+  }, [shouldPlay, play]);
 
   return (
     <div className="fixed bottom-5 right-5 z-40 flex items-center gap-2">
-      <iframe
+      <audio
         ref={playerRef}
-        src={playerUrl}
-        title="Celebration music"
-        allow="autoplay; encrypted-media"
-        className="absolute h-px w-px opacity-0 pointer-events-none"
-        onLoad={() => sendPlayerCommand("playVideo")}
+        src={audioSource}
+        loop
+        preload="auto"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
       />
 
       <button
@@ -74,4 +78,4 @@ export const MusicPlayer: React.FC = () => {
       </button>
     </div>
   );
-};
+});
