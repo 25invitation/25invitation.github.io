@@ -27,7 +27,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
   const [guestName, setGuestName] = useState<string>(
     isGeneralGuest ? "" : currentGuest.name
   );
-  const [guestCount, setGuestCount] = useState<number>(2);
+  const [guestCount, setGuestCount] = useState<number>(0);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -295,7 +295,7 @@ export const RsvpForm: React.FC<RsvpFormProps> = ({
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      onClick={() => setGuestCount((prev) => Math.max(1, prev - 1))}
+                      onClick={() => setGuestCount((prev) => Math.max(0, prev - 1))}
                       className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold text-lg flex items-center justify-center transition-colors cursor-pointer"
                     >
                       -
