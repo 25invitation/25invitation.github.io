@@ -75,13 +75,13 @@ export const eventConfig: EventConfig = {
     time: "5:30 PM Onwards",
     venueName: "Shubham Hall",
     venueHall: "Grand Ballroom",
-    address: "1214 Apollo Way",
+    address: "341 Colbalt Way",
     cityStateZip: "Sunnyvale, CA 94085",
-    mapUrl: "https://maps.google.com/?q=1214+Apollo+Way,+Sunnyvale,+CA+94085",
+    mapUrl: "https://maps.google.com/?q=341+Colbalt+Way,+Sunnyvale,+CA+94085",
     calendarDetails: {
       title: "Kshitiz & Sakshi's 25th Silver Jubilee Anniversary Celebration",
       description: "Join us in celebrating 25 years of love and togetherness with Kshitiz & Sakshi! Dress code: Silver Jubilee Glam & Indian Festive.",
-      location: "Shubham Hall, 1214 Apollo Way, Sunnyvale, CA 94085",
+      location: "Shubham Hall, 341 Colbalt Way, Sunnyvale, CA 94085",
       startTime: "20260907T003000Z", // 5:30 PM PDT
       endTime: "20260907T063000Z",
     },
